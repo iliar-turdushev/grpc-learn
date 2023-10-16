@@ -24,6 +24,8 @@ public class GreeterService : Greeter.GreeterBase
             Message = "Hello " + request.Name + " #1"
         });
 
+        await Task.Delay(1000);
+
         await responseStream.WriteAsync(new HelloReply
         {
             Message = "Hello " + request.Name + " #2"
@@ -54,6 +56,8 @@ public class GreeterService : Greeter.GreeterBase
     {
         await foreach (var message in requestStream.ReadAllAsync())
         {
+            await Task.Delay(1000);
+
             await responseStream.WriteAsync(new HelloReply
             {
                 Message = $"Hello {message.Name}"

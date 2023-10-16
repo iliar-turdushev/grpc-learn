@@ -8,7 +8,10 @@ using Microsoft.Extensions.Logging;
 
 var loggerFactory = LoggerFactory.Create(builder =>
 {
-    builder.AddSimpleConsole();
+    builder.AddSimpleConsole(options =>
+    {
+        options.TimestampFormat = "HH:mm:ss ";
+    });
 });
 var logger = loggerFactory.CreateLogger<Program>();
 
@@ -19,7 +22,10 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         logging
             .ClearProviders()
-            .AddSimpleConsole()
+            .AddSimpleConsole(options =>
+            {
+                options.TimestampFormat = "HH:mm:ss ";
+            })
             .AddFilter("System.Net.Http.HttpClient", LogLevel.None);
     })
     .ConfigureServices((context, services) =>
@@ -80,6 +86,9 @@ await clientStreamCall.RequestStream.WriteAsync(new HelloRequest
 {
     Name = "Client #1"
 });
+
+await Task.Delay(1000);
+
 await clientStreamCall.RequestStream.WriteAsync(new HelloRequest
 {
     Name = "Client #2"
@@ -99,6 +108,8 @@ await duplexStreamCall.RequestStream.WriteAsync(new HelloRequest
     Name = "Client Duplex #1"
 });
 await duplexStreamCall.ResponseStream.MoveNext();
+
+await Task.Delay(1000);
 
 await duplexStreamCall.RequestStream.WriteAsync(new HelloRequest
 {

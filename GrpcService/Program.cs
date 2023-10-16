@@ -2,6 +2,16 @@ using GrpcService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging(logging =>
+{
+    logging
+        .ClearProviders()
+        .AddSimpleConsole(options =>
+        {
+            options.TimestampFormat = "HH:mm:ss ";
+        });
+});
+
 // Add services to the container
 builder.Services.AddGrpc(options =>
 {
